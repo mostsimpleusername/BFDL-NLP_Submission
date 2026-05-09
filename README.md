@@ -1,309 +1,546 @@
-# 📊 Indonesian Financial App Sentiment Analysis
+# 📈 Indonesian Stock Investment App Sentiment Analysis
 
-### NLP Project · Google Play Store Reviews · 3-Class Classification
-
----
-
-## 🚀 Overview
-
-This project builds an **end-to-end sentiment analysis pipeline** for Indonesian-language user reviews from major financial (sekuritas) mobile applications on the Google Play Store.
-
-The system automatically classifies reviews into:
-
-* **Negative**
-* **Neutral**
-* **Positive**
-
-Target applications:
-
-* Bibit
-* Ajaib
-* Stockbit
-* IPOT
-
-The project is designed as:
-
-* 🎓 Academic NLP submission
-* 💼 Portfolio-ready AI engineering project
-* ⚙️ Reproducible ML pipeline
+Sentiment analysis project for Indonesian stock investment and brokerage applications using Machine Learning, Deep Learning, and Transformer-based models.
 
 ---
 
-## 🎯 Objectives
+# 📌 Project Overview
 
-* Scrape and build a dataset of **≥10,000 reviews**
-* Perform **3-class sentiment classification**
-* Train **≥3 machine learning models**
-* Achieve **≥85% test accuracy**
-* Provide **inference on unseen text**
-* Deliver a **fully reproducible pipeline**
+This project aims to analyze user sentiment toward Indonesian investment and brokerage applications based on reviews collected from the Google Play Store.
+
+The dataset was independently collected through a scraping process using Python and the `google-play-scraper` library.
+
+The project implements several approaches:
+
+- Traditional Machine Learning
+- Deep Learning
+- Transformer-based NLP (IndoBERT)
 
 ---
 
-## 📂 Project Structure
+# 🎯 Objectives
 
-```
+The main objectives of this project are:
+
+- Collect review datasets from Indonesian investment applications
+- Perform Indonesian text preprocessing
+- Build sentiment classification models
+- Compare multiple machine learning and deep learning approaches
+- Implement sentiment inference on unseen data
+
+---
+
+# 📱 Applications Analyzed
+
+The dataset consists of reviews from several popular Indonesian investment platforms:
+
+| Application | Play Store ID |
+|---|---|
+| Ajaib | `ajaib.co.id` |
+| Bibit | `com.bibit.bibitid` |
+| Stockbit | `com.stockbit.android` |
+| IPOT | `com.indopremier.ipot` |
+
+---
+
+# 📊 Dataset Information
+
+| Information | Value |
+|---|---|
+| Data Source | Google Play Store |
+| Total Samples | 10,000+ reviews |
+| Language | Indonesian |
+| Labels | Positive, Neutral, Negative |
+| Collection Method | Web Scraping |
+
+---
+
+# ⚠️ Ethical Considerations
+
+This project follows ethical data collection practices:
+
+- Uses publicly available Google Play Store reviews
+- Does not collect sensitive user information
+- Avoids excessive scraping requests
+- Includes delay mechanisms during scraping
+- Used strictly for educational and research purposes
+
+---
+
+# 🛠️ Technologies Used
+
+## Programming Language
+- Python
+
+## Main Libraries
+- pandas
+- numpy
+- scikit-learn
+- tensorflow
+- transformers
+- torch
+- nltk
+- matplotlib
+- seaborn
+- google-play-scraper
+- wordcloud
+
+---
+
+# 📂 Project Structure
+
+```bash
+sentiment-analysis-sekuritas/
+│
 ├── data/
-│   ├── dataset_raw.csv
-│   └── dataset_processed.csv
+│   ├── reviews_sekuritas.csv
+│   ├── cleaned_reviews.csv
 │
 ├── notebooks/
-│   └── sentiment_analysis_sekuritas.ipynb
+│   ├── sentiment_analysis.ipynb
 │
 ├── models/
-│   ├── tfidf_vectorizer.pkl
-│   ├── model_lr.pkl
-│   ├── model_svm.pkl
-│   └── model_rf.pkl
+│   ├── random_forest.pkl
+│   ├── indobert/
 │
-├── src/
-│   ├── scraper.py
-│   ├── preprocessing.py
-│   └── slang_dict.py
+├── images/
+│   ├── confusion_matrix.png
+│   ├── wordcloud_positive.png
+│   ├── wordcloud_negative.png
 │
-├── word2vec.model
+├── nlp_submission_scraping.py
 ├── requirements.txt
-└── README.md
+├── README.md
+└── scrape.py
 ```
 
 ---
 
-## 📊 Dataset
+# 🔎 Data Scraping
 
-* **Source:** Google Play Store (public reviews)
-* **Language:** Indonesian (mixed informal + slang)
-* **Size:** ≥10,000 reviews
-* **Apps Covered:** Bibit, Ajaib, Stockbit, IPOT
-
-### Data Schema
-
-| Column        | Description        |
-| ------------- | ------------------ |
-| app           | Source application |
-| reviewId      | Unique review ID   |
-| content       | Raw review text    |
-| score         | Rating (1–5)       |
-| at            | Timestamp          |
-| thumbsUpCount | Helpfulness votes  |
-| sentiment     | Label (derived)    |
-
----
-
-## 🏷️ Labeling Strategy
-
-Labels are generated using rating-based rules:
-
-| Score | Sentiment |
-| ----- | --------- |
-| 1–2   | Negative  |
-| 3     | Neutral   |
-| 4–5   | Positive  |
-
-> ⚠️ Note: This introduces some noise but is a standard scalable approach.
-
----
-
-## 🧹 Preprocessing Pipeline
-
-The pipeline is designed specifically for **informal Indonesian text**.
-
-### Steps:
-
-* Lowercasing
-* URL & symbol removal
-* Slang normalization (e.g., *"gak" → "tidak"*)
-* Stopword removal (**negation preserved**)
-* Tokenization
-
-### ⚠️ Important Design Decision:
-
-Negation words like:
-
-```
-tidak, bukan, kurang
-```
-
-are **NOT removed**, because they invert sentiment.
-
----
-
-## 🧠 Feature Engineering
-
-### 1. TF-IDF
-
-* Unigrams + Bigrams
-* Max features: 10,000
-* Sparse representation
-
-### 2. Word2Vec
-
-* Vector size: 100
-* Trained on dataset
-* Document vector = average word embeddings
-
----
-
-## 🤖 Models & Experiments
-
-| Experiment | Features | Model               |
-| ---------- | -------- | ------------------- |
-| EXP-01     | TF-IDF   | Logistic Regression |
-| EXP-02     | TF-IDF   | SVM                 |
-| EXP-03     | Word2Vec | Random Forest       |
-
-### Tuning:
-
-* GridSearchCV
-* 5-fold cross-validation
-* Metric: **Macro F1-score**
-
----
-
-## 📈 Evaluation Metrics
-
-* Accuracy
-* Precision
-* Recall
-* **Macro F1-score (primary)**
-* Confusion Matrix
-
-> Macro F1 is used to handle **class imbalance**.
-
----
-
-## 🧪 Results (Example)
-
-| Model               | Accuracy | Macro F1 |
-| ------------------- | -------- | -------- |
-| Logistic Regression | 0.87     | 0.85     |
-| SVM                 | 0.89     | 0.87     |
-| Random Forest       | 0.83     | 0.80     |
-
-> ✅ Best model exceeds **85% accuracy requirement**
-
----
-
-## 🔍 Insight Extraction
-
-Beyond classification, the project extracts:
-
-* Most common **positive keywords**
-* Most frequent **complaints**
-* Sentiment distribution per app
-* Example reviews per class
-
-This simulates real-world usage for:
-
-* Product teams
-* Market analysis
-
----
-
-## 🧪 Inference Example
+The dataset was collected using:
 
 ```python
-predict_sentiment("aplikasinya gak bisa login, error terus")
-# Output: "negative"
+from google_play_scraper import reviews
 ```
 
-### Sample Inputs:
+Main scraping configuration:
 
-| Input                          | Prediction |
-| ------------------------------ | ---------- |
-| "aplikasinya bagus banget"     | Positive   |
-| "tidak bisa login sama sekali" | Negative   |
-| "lumayan tapi masih ada bug"   | Neutral    |
+```python
+apps = {
+    "Ajaib": "ajaib.co.id",
+    "Bibit": "com.bibit.bibitid",
+    "Stockbit": "com.stockbit.android",
+    "IPOT": "com.indopremier.ipot"
+}
+```
+
+Target reviews per application:
+
+```python
+TARGET_PER_APP = 4000
+```
+
+Scraping strategy:
+
+- Collect latest reviews (`Sort.NEWEST`)
+- Use continuation tokens for pagination
+- Add request delays to avoid spam requests
+- Store review metadata for analysis
 
 ---
 
-## ⚙️ Installation
+# 📋 Dataset Columns
+
+| Column | Description |
+|---|---|
+| app | Application name |
+| reviewId | Review ID |
+| userName | Username |
+| content | Review text |
+| score | User rating |
+| thumbsUpCount | Number of likes |
+| at | Review timestamp |
+| appVersion | Application version |
+
+---
+
+# 🧹 Text Preprocessing
+
+The preprocessing pipeline includes:
+
+## 1. Missing Value Removal
+Remove empty or null reviews.
+
+## 2. Duplicate Removal
+Remove duplicate reviews.
+
+## 3. Regex Cleaning
+Remove:
+
+- URLs
+- Mentions
+- Hashtags
+- Numbers
+- Emojis
+- Symbols
+- Special characters
+
+## 4. Case Folding
+Convert all text to lowercase.
+
+## 5. Slang Normalization
+Convert informal Indonesian words into formal words.
+
+Example:
+
+| Slang | Formal |
+|---|---|
+| gk | tidak |
+| bgt | banget |
+| tdk | tidak |
+
+## 6. Tokenization
+Split text into tokens.
+
+## 7. Stopword Removal
+Remove common non-informative words.
+
+---
+
+# 🏷️ Labeling Strategy
+
+Sentiment labels are generated based on user ratings:
+
+| Rating | Label |
+|---|---|
+| 4-5 | Positive |
+| 3 | Neutral |
+| 1-2 | Negative |
+
+---
+
+# ⚙️ Feature Extraction
+
+## TF-IDF
+Used for traditional Machine Learning models.
+
+```python
+TfidfVectorizer(
+    max_features=25000,
+    ngram_range=(1,2),
+    min_df=3,
+    max_df=0.9,
+    sublinear_tf=True,
+    norm='l2'
+)
+```
+
+## Word Embedding
+Used for Deep Learning models.
+
+## Transformer Embedding
+Used pretrained IndoBERT embeddings.
+
+---
+
+# 🤖 Models Used
+
+## Machine Learning Models
+
+### Logistic Regression
+Used as a baseline model.
+
+### Support Vector Machine (SVM)
+Used for high-dimensional text classification.
+
+### Random Forest
+Used to capture non-linear patterns.
+
+## Deep Learning Models
+
+### Bi-LSTM
+Used to understand sequential text patterns.
+
+### IndoBERT
+Transformer-based pretrained Indonesian language model.
+
+---
+
+# 📈 Evaluation Metrics
+
+Model performance was evaluated using:
+
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+- Confusion Matrix
+
+---
+
+# 📊 Model Results
+
+| Scheme | Algorithm | Feature Extraction | Split Ratio | Test Accuracy |
+|---|---|---|---|---|
+| 1 | Logistic Regression | TF-IDF | 80:20 | 85.28% |
+| 2 | SVM | TF-IDF | 80:20 | 83%+ |
+| 3 | Random Forest | TF-IDF | 80:20 | 85.44% |
+| 4 | Bi-LSTM | Embedding | 70:30 | 82%+ |
+| 5 | IndoBERT | Transformer | 80:20 | 86.67% |
+
+---
+
+# 🧠 Key Findings
+
+- IndoBERT achieved the best overall performance.
+- TF-IDF + Random Forest produced stable and lightweight results.
+- The neutral class was the most difficult to classify.
+- Many reviews contained mixed sentiments.
+- Informal Indonesian language significantly affected model performance.
+
+---
+
+# ❌ Challenges
+
+Main challenges encountered during development:
+
+- Imbalanced dataset
+- Noisy real-world text
+- Indonesian slang language
+- Ambiguous sentiment
+- Sarcasm
+- Negation context handling
+
+---
+
+# 🔬 Error Analysis
+
+Traditional TF-IDF-based models struggled to understand contextual negation.
+
+Example:
+
+```text
+"fiturnya tidak terlalu membantu"
+```
+
+The word "membantu" (helpful) was often interpreted as positive despite the negative context.
+
+Transformer-based models such as IndoBERT performed better in handling contextual meaning.
+
+---
+
+# 🚀 Inference Example
+
+## Input
+
+```text
+"aplikasinya bagus tapi sering error"
+```
+
+## Output
+
+```text
+negative
+```
+
+---
+
+# 📉 Visualization
+
+The project includes several visualizations:
+
+- Sentiment distribution
+- Word clouds
+- Confusion matrix
+- Model accuracy comparison
+
+---
+
+# ▶️ How to Run
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/your-username/sentiment-analysis-sekuritas.git
+```
+
+## 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## ▶️ How to Run
-
-1. Run scraping script:
+## 3. Run Scraping Script
 
 ```bash
-python src/scraper.py
+python nlp_submission_scraping.py
 ```
 
-2. Open notebook:
+## 4. Open Jupyter Notebook
 
 ```bash
-jupyter notebook notebooks/sentiment_analysis_sekuritas.ipynb
+jupyter notebook
 ```
 
-3. Run all cells from top to bottom
+---
+
+# 📦 Requirements
+
+```text
+pandas
+numpy
+scikit-learn
+tensorflow
+transformers
+torch
+nltk
+matplotlib
+seaborn
+wordcloud
+google-play-scraper
+```
 
 ---
 
-## 📦 Deliverables
+# 📚 Learning Outcomes
 
-* ✅ Raw dataset (`dataset_raw.csv`)
-* ✅ Processed dataset (`dataset_processed.csv`)
-* ✅ Trained models (`.pkl`)
-* ✅ Word2Vec model
-* ✅ Notebook (end-to-end pipeline)
-* ✅ Requirements file
+Through this project, I learned:
 
----
-
-## ⚠️ Challenges & Solutions
-
-| Challenge         | Solution                  |
-| ----------------- | ------------------------- |
-| Slang language    | Custom slang dictionary   |
-| Class imbalance   | class_weight='balanced'   |
-| Noisy labels      | Acknowledged + documented |
-| Negation handling | Explicit preservation     |
+- Indonesian NLP preprocessing
+- Sentiment analysis workflow
+- TF-IDF feature extraction
+- Deep Learning for NLP
+- Transformer-based NLP
+- Model evaluation
+- Error analysis
+- Data scraping
+- Text classification
+- Handling noisy real-world datasets
+- Hyperparameter experimentation
+- Comparing ML vs DL vs Transformer models
 
 ---
 
-## 📌 Limitations
+# 📝 Reviewer Feedback & Reflection
 
-* Labeling based on ratings (not manual)
-* Limited handling of sarcasm
-* Word2Vec performance depends on dataset size
+This project successfully fulfilled several important requirements:
+
+✅ Implemented Deep Learning models
+
+✅ Used more than 10,000 data samples
+
+✅ Applied multi-class sentiment classification
+
+✅ Conducted multiple training experiments
+
+✅ Performed sentiment inference on unseen data
+
+However, the reviewer also provided several improvement suggestions:
+
+- Test accuracy has not yet exceeded 92%
+- Text preprocessing can still be optimized
+- Rating-based labeling may introduce bias
+- Models still struggle with ambiguous and negated sentences
+
+From this feedback, several important insights were gained:
+
+- Real-world datasets contain significant noise
+- Label quality strongly affects model performance
+- Transformer-based models outperform traditional approaches in contextual understanding
+- Error analysis is essential to understand model limitations
+- NLP optimization depends not only on models but also on preprocessing quality and labeling strategy
+
+The reviewer feedback became an important learning resource for improving future NLP projects.
+
+---
+
+# 🔮 Future Improvements
+
+Based on reviewer suggestions, several future improvements can be implemented:
+
+## 🔹 Improve Model Performance
+
+- Perform extensive hyperparameter tuning
+- Fine-tune IndoBERT using optimized learning rates
+- Apply early stopping and regularization
+- Use class weighting for imbalanced datasets
+- Implement cross-validation to reduce overfitting
+
+## 🔹 Advanced Text Preprocessing
+
+- Improve slang normalization
+- Add emoji handling
+- Compare stemming vs lemmatization
+- Filter noisy reviews
+- Handle negation context more effectively
+- Apply text augmentation techniques
+
+## 🔹 Better Feature Extraction
+
+Additional feature extraction methods:
+
+- Word2Vec
+- FastText
+- GloVe
+- Contextual embeddings
+
+## 🔹 Better Labeling Strategy
+
+- Manual relabeling for ambiguous samples
+- Semi-supervised labeling
+- BERT-assisted labeling
+- Reduce rating-based labeling bias
+
+## 🔹 Experiment Tracking
+
+- MLflow
+- Weights & Biases
+- Hyperparameter logging
+
+## 🔹 Explainable AI (XAI)
+
+Improve model interpretability using:
+
+- SHAP
+- LIME
+- PCA visualization
+- t-SNE visualization
+
+## 🔹 Better Evaluation
+
+- Per-class precision
+- Per-class recall
+- Per-class F1-score
+- Confusion matrix analysis
+- Detailed error analysis
+
+## 🔹 Deployment
+
+- REST API deployment
+- Streamlit dashboard
+- Real-time sentiment analysis
+- Docker containerization
 
 ---
 
-## 🔮 Future Improvements
+# 👨‍💻 Author
 
-* Use deep learning (IndoBERT)
-* Aspect-based sentiment analysis
-* Real-time API deployment
-* Larger dataset integration
+Akmal Maulana
 
 ---
 
-## ⚖️ Ethics & Compliance
+# 📜 License
 
-* Uses **publicly available data only**
-* No personal data collected
-* No scraping abuse (rate-limited)
-* Academic use only
+This project was created for educational and research purposes.
 
 ---
 
-## 👨‍💻 Author
+# ⭐ Acknowledgements
 
-**Akmal Maulana**
-AI / Data Enthusiast
+- Google Play Store
+- Hugging Face
+- TensorFlow
+- Scikit-learn
+- Dicoding Indonesia
 
----
-
-## ⭐ Why This Project Matters
-
-This project demonstrates:
-
-* End-to-end ML pipeline design
-* Real-world data handling
-* Indonesian NLP challenges
-* Production-thinking approach
-
----
